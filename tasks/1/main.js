@@ -1,16 +1,17 @@
 const fs = require('fs');
+const common = require('../../common/common');
 
 fs.readFile('input.txt', 'utf-8', (err, data) => {
     if (err) throw err;
     var sortedData = sortInputs(data);
     var result = get2ValuesThatAddTo2020(sortedData);
-    console.log("The 2 numbers that add to 2020 are " + result['1'] + " and " + result['2']);
+    common.logMessage("The 2 numbers that add to 2020 are " + result['1'] + " and " + result['2']);
     var multiply = parseInt(result['1']) * parseInt(result['2']);
-    console.log("The multiplied answer for 2 values is " + multiply);
+    common.logMessage("The multiplied answer for 2 values is " + multiply);
     var resultThree = get3ValuesThatAddTo2020(sortedData);
-    console.log("The 3 numbers that add to 2020 are " + resultThree['1'] + " and " + resultThree['2'] + " and " + resultThree['3']);
+    common.logMessage("The 3 numbers that add to 2020 are " + resultThree['1'] + " and " + resultThree['2'] + " and " + resultThree['3']);
     var multiplyThree = parseInt(resultThree['1']) * parseInt(resultThree['2']) * parseInt(resultThree['3']);
-    console.log("The multiplied answer for 3 values is " + multiplyThree);
+    common.logMessage("The multiplied answer for 3 values is " + multiplyThree);
 })
 
 function sortInputs(inputData) {
@@ -37,7 +38,7 @@ function get2ValuesThatAddTo2020(inputData) {
             }
         }
     }
-    console.log("ERROR::Could not find matching 2 values");
+    common.logMessage("Could not find matching 2 values", "error");
     return null;
 }
 
@@ -69,6 +70,6 @@ function get3ValuesThatAddTo2020(inputData) {
             }
         }
     }
-    console.log("ERROR::Could not find matching 3 values");
+    common.logMessage("Could not find matching 3 values", "error");
     return null;
 }
