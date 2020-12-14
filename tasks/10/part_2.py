@@ -1,4 +1,4 @@
-def getReference(input, adapter, reference):
+def getReference(input, adapter):
     currentJolts = 0
     jumps = [currentJolts]
     for i in range(len(input)):
@@ -8,15 +8,30 @@ def getReference(input, adapter, reference):
         else:
             print("Error current jolts is " + str(currentJolts) +
                   " and next is " + str(lines[i]))
-    for key, value in reference.items():
-        if jumps == value:
-            for i in range(len(input) - 1):
-                
-
-            return None
+            return False
     jumps.append(currentJolts + adapter)
     return jumps
 
+def getArrangements(reference, rotationIndex, arrangements):
+    newArrangements = {}
+    for i in range(rotationIndex, len(reference) - 2):
+        recurArrangements = {}
+        if reference[i + 2] - reference[i] <= 3:
+            tmp = [reference[i]]
+            arrangement = reference[:i] + tmp + reference[i + 2:]
+            print(arrangement)
+            exists = 0
+            for key, value in arrangements.items():
+                if value == arrangement:
+                    exists = 1
+                    return False
+            if exists == 0:
+                recurArrangements = getArrangements(arrangement, i, arrangements)
+                # print(recurArrangements)
+                if recurArrangements != False:
+                    newArrangements = {**newArrangements, **recurArrangements}
+     
+    return  newArrangements
 
 file_path = 'example.txt'
 initialJolts = 0
@@ -28,12 +43,11 @@ with open(file_path) as f:
 
 lines.sort()
 
-maxArrangements = len(lines) - (len(lines) / 3)
-reference = {}
-for i in range(maxArrangements):
-    referenceJumps = getReference(lines, adapter, reference)
-    if referenceJumps == None:
-        print("***ERROR***: Matched reference")
-        break
-    reference[i] = referenceJumps
-    print(reference[i])
+reference = getReference(lines, adapter)
+arrangements = {}
+arrangements[0] = reference
+for i in range(len(reference)):
+    newArrangements = getArrangements(reference, i, arrangements)
+    arrangements = {**arrangements, **newArrangements}
+    print(arrangements)
+print(reference)
