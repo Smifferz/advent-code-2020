@@ -12,28 +12,23 @@ def getReference(input, adapter):
     jumps.append(currentJolts + adapter)
     return jumps
 
-def getArrangements(reference, rotationIndex, arrangements):
-    newArrangements = {}
-    for i in range(rotationIndex, len(reference) - 2):
-        recurArrangements = {}
-        if reference[i + 2] - reference[i] <= 3:
-            tmp = [reference[i]]
-            arrangement = reference[:i] + tmp + reference[i + 2:]
-            print(arrangement)
-            exists = 0
-            for key, value in arrangements.items():
-                if value == arrangement:
-                    exists = 1
-                    return False
-            if exists == 0:
-                recurArrangements = getArrangements(arrangement, i, arrangements)
-                # print(recurArrangements)
-                if recurArrangements != False:
-                    newArrangements = {**newArrangements, **recurArrangements}
-     
-    return  newArrangements
+def getArrangements(index, reference, explored):
+    if index == len(reference) - 1:
+        return 1
+    if index in explored:
+        return explored[index]
 
-file_path = 'example.txt'
+    arrangements = 0
+    for i in range(index + 1, len(reference)):
+        if reference[i] - reference[index] <= 3:
+            arrangements = arrangements + getArrangements(i, reference, explored)
+
+    explored[index] = arrangements
+
+    return arrangements
+    
+
+file_path = 'input.txt'
 initialJolts = 0
 adapter = 3
 
@@ -44,10 +39,8 @@ with open(file_path) as f:
 lines.sort()
 
 reference = getReference(lines, adapter)
+stringReference = ' '.join(str(elem) for elem in reference)
 arrangements = {}
-arrangements[0] = reference
-for i in range(len(reference)):
-    newArrangements = getArrangements(reference, i, arrangements)
-    arrangements = {**arrangements, **newArrangements}
-    print(arrangements)
-print(reference)
+
+finalArrangements = getArrangements(0, reference, arrangements)
+print(finalArrangements)
